@@ -50,7 +50,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_menu' => 'required',
             'harga' => 'required|numeric',
-            'foto' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'foto' => 'required|image|mimes:png,jpg,jpeg',
         ], [
             'nama_menu.required' => 'Nama menu harus diisi',
             'harga.required' => 'Harga harus diisi',

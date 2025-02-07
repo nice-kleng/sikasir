@@ -22,7 +22,6 @@
     <link href="{{ asset('assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <!-- Custom styles for this page -->
     <link href="{{ asset('assets/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-
 </head>
 
 <body id="page-top">
@@ -55,6 +54,12 @@
                 <a class="nav-link" href="{{ route('products.index') }}">
                     <i class="fas fa-fw fa-utensils"></i>
                     <span>Product</span></a>
+            </li>
+
+            <li class="nav-item {{ request()->routeIs('kasir.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('kasir.index') }}">
+                    <i class="fas fa-fw fa-money"></i>
+                    <span>Kasir</span></a>
             </li>
 
             <!-- Divider -->

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticateController;
+use App\Http\Controllers\KasirController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,6 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::resource('/products', ProductController::class);
+
+    Route::get('/kasir', [KasirController::class, 'index'])->name('kasir.index');
 });
