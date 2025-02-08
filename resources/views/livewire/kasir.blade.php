@@ -1,27 +1,6 @@
 <div>
     {{-- The best athlete wants his opponent at his best. --}}
     <div class="row">
-        <!-- Sidebar -->
-        {{-- <div class="col-md-2 sidebar p-4">
-            <h4 class="mb-4"><i class="fas fa-cash-register mr-2"></i>KasirKu</h4>
-            <div class="nav flex-column">
-                <a href="#" class="nav-link text-white active">
-                    <i class="fas fa-home mr-2"></i>Dashboard
-                </a>
-                <a href="#" class="nav-link text-white">
-                    <i class="fas fa-shopping-cart mr-2"></i>Transaksi
-                </a>
-                <a href="#" class="nav-link text-white">
-                    <i class="fas fa-box mr-2"></i>Produk
-                </a>
-                <a href="#" class="nav-link text-white">
-                    <i class="fas fa-chart-bar mr-2"></i>Laporan
-                </a>
-                <a href="#" class="nav-link text-white">
-                    <i class="fas fa-cog mr-2"></i>Pengaturan
-                </a>
-            </div>
-        </div> --}}
 
         <!-- Main Content -->
         <div class="col-md-12 main-content p-4">

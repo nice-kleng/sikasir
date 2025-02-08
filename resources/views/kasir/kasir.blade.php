@@ -25,19 +25,23 @@
 
     <script>
         window.addEventListener('showPaymentModal', event => {
-            console.log(event);
+            console.log('Payment Token:', event.detail[0].snapToken);
 
-            snap.pay(event.detail.snapToken, {
+            snap.pay(event.detail[0].snapToken, {
                 onSuccess: function(result) {
+                    console.log('Success:', result);
                     Livewire.dispatch('paymentSuccess', result);
                 },
                 onPending: function(result) {
+                    console.log('Pending:', result);
                     Livewire.dispatch('paymentPending', result);
                 },
                 onError: function(result) {
+                    console.error('Error:', result);
                     Livewire.dispatch('paymentError', result);
                 },
                 onClose: function() {
+                    console.log('Customer closed the popup without finishing the payment');
                     Livewire.dispatch('paymentClosed');
                 }
             });
