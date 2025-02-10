@@ -58,8 +58,14 @@
 
             <li class="nav-item {{ request()->routeIs('kasir.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('kasir.index') }}">
-                    <i class="fas fa-fw fa-money"></i>
+                    <i class="fas fa-cash-register"></i>
                     <span>Kasir</span></a>
+            </li>
+
+            <li class="nav-item {{ request()->routeIs('report.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('report.index') }}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Laporan</span></a>
             </li>
 
             <!-- Divider -->

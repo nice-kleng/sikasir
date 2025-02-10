@@ -24,4 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('/products', ProductController::class);
 
     Route::get('/kasir', [KasirController::class, 'index'])->name('kasir.index');
+    Route::get('/report', [App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
+    Route::get('/report/pdf', [App\Http\Controllers\ReportController::class, 'generatePDF'])->name('report.pdf');
 });
