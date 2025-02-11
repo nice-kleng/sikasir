@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Carbon\Carbon;
 
 class TransactionSeeder extends Seeder
 {
@@ -15,51 +16,74 @@ class TransactionSeeder extends Seeder
         $faker = Faker::create('id_ID');
         $products = Product::all();
 
-        // Create 20 sample transactions
-        for ($i = 0; $i < 20; $i++) {
-            $transaction = Transaction::create([
-                'nomor_invoice' => 'INV-' . date('Ymd') . $faker->unique()->numberBetween(100, 999),
-                'total_pembayaran' => 0, // Will be calculated later
-                'total_pajak' => 0, // Will be calculated later
-                'payment_method' => $faker->randomElement(['cash', 'card', 'qris']),
-                'user_id' => $faker->randomElement([1, 2]),
-                'payment_status' => 'paid',
-                'snap_token' => null,
-                'midtrans_transaction_id' => null,
-                'midtrans_payment_type' => null,
-            ]);
+        // Generate data untuk 1 bulan terakhir saja
+        $startDate = Carbon::now()->subMonth()->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
+        $currentDate = $startDate->copy();
 
-            // Create 1-5 items for each transaction
-            $totalPembayaran = 0;
-            $itemCount = $faker->numberBetween(1, 5);
+        while ($currentDate <= $endDate) {
+            // Generate 3-8 transaksi per hari
+            $transactionsPerDay = $faker->numberBetween(3, 8);
 
-            for ($j = 0; $j < $itemCount; $j++) {
-                $product = $products->random();
-                $qty = $faker->numberBetween(1, 3);
-                $harga = $product->harga;
-                $subtotal = $qty * $harga;
-                $discount = $faker->randomElement([0, 5000, 10000]);
-                $subtotal -= $discount;
+            for ($i = 0; $i < $transactionsPerDay; $i++) {
+                // Beri jeda waktu minimal 15 menit antar transaksi
+                $transactionTime = $currentDate->copy()
+                    ->addHours($faker->numberBetween(10, 22))
+                    ->addMinutes($faker->numberBetween(0, 59));
 
-                TransactionItem::create([
-                    'transaction_id' => $transaction->id,
-                    'product_id' => $product->id,
-                    'jumlah' => $qty,
-                    'harga' => $harga,
-                    'subtotal' => $subtotal,
-                    'discount' => $discount,
-                    'notes' => $faker->optional()->sentence(),
+                // Generate invoice dengan microseconds
+                $microtime = sprintf('%06d', $faker->numberBetween(0, 999999));
+                $invoiceNumber = sprintf(
+                    'INV/%s/%s',
+                    $transactionTime->format('Ymd'),
+                    $microtime
+                );
+
+                $transaction = Transaction::create([
+                    'nomor_invoice' => $invoiceNumber,
+                    'total_pembayaran' => 0, // Initialize with 0
+                    'total_pajak' => 0,      // Initialize with 0
+                    'payment_method' => $faker->randomElement(['cash', 'card']),
+                    'user_id' => 1,
+                    'payment_status' => 'paid',
+                    'created_at' => $transactionTime,
+                    'updated_at' => $transactionTime,
+                    'snap_token' => null,
+                    'midtrans_transaction_id' => null,
+                    'midtrans_payment_type' => null,
                 ]);
 
-                $totalPembayaran += $subtotal;
+                // Buat 1-3 items per transaksi
+                $totalPembayaran = 0;
+                $itemCount = $faker->numberBetween(1, 3);
+
+                for ($j = 0; $j < $itemCount; $j++) {
+                    $product = $products->random();
+                    $qty = $faker->numberBetween(1, 2);
+                    $subtotal = $qty * $product->harga;
+
+                    TransactionItem::create([
+                        'transaction_id' => $transaction->id,
+                        'product_id' => $product->id,
+                        'jumlah' => $qty,
+                        'harga' => $product->harga,
+                        'subtotal' => $subtotal,
+                        'discount' => 0,
+                        'created_at' => $transactionTime,
+                        'updated_at' => $transactionTime,
+                    ]);
+
+                    $totalPembayaran += $subtotal;
+                }
+
+                $pajak = round($totalPembayaran * 0.1);
+                $transaction->update([
+                    'total_pembayaran' => $totalPembayaran,
+                    'total_pajak' => $pajak
+                ]);
             }
 
-            // Update transaction totals
-            $pajak = round($totalPembayaran * 0.1); // 10% tax
-            $transaction->update([
-                'total_pembayaran' => $totalPembayaran,
-                'total_pajak' => $pajak
-            ]);
+            $currentDate->addDay();
         }
     }
 }

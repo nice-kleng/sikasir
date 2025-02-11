@@ -7,9 +7,14 @@ use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Services\MidtransService;
+use Livewire\WithPagination;
 
 class Kasir extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
     public $cart = [];
     public $searchQuery = '';
     public $paymentMethod = 'cash';
@@ -68,7 +73,7 @@ class Kasir extends Component
             'total_pajak' => $this->tax,
             'payment_method' => $this->paymentMethod,
             'user_id' => auth()->id(),
-            'payment_status' => 'pending'
+            'payment_status' => $this->paymentMethod === 'cash' ? 'paid' : 'pending'
         ]);
 
         foreach ($this->cart as $productId => $item) {
@@ -81,12 +86,15 @@ class Kasir extends Component
             ]);
         }
 
-        // $this->cart = [];
-        // $this->dispatch('paymentSuccess');
-        // Generate Snap Token
+        if ($this->paymentMethod === 'cash') {
+            $this->cart = [];
+            $this->dispatch('paymentSuccess', ['message' => 'Pembayaran tunai berhasil!']);
+            return;
+        }
+
+        // Proses pembayaran online melalui Midtrans
         $midtransService = new MidtransService();
         $snapToken = $midtransService->createTransaction($transaction);
-        // dd($snapToken);
 
         if ($snapToken) {
             $transaction->update(['snap_token' => $snapToken]);
@@ -101,7 +109,7 @@ class Kasir extends Component
     {
         $products = Product::when($this->searchQuery, function ($query) {
             $query->where('nama_menu', 'like', '%' . $this->searchQuery . '%');
-        })->get();
+        })->paginate(6);
 
         return view('livewire.kasir', [
             'products' => $products

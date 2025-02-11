@@ -40,6 +40,24 @@ class ProductSeeder extends Seeder
                 'foto' => 'juice-alpukat.jpg',
                 'deskripsi' => 'Juice alpukat segar dengan susu'
             ],
+            [
+                'nama_menu' => 'Jus Jeruk',
+                'harga' => 10000,
+                'foto' => 'orange-juice.jpg',
+                'deskripsi' => 'Juice jeruk segar dengan susu dan madu'
+            ],
+            [
+                'nama_menu' => 'Lemon Tea',
+                'harga' => 8000,
+                'foto' => 'lemon-tea.jpg',
+                'deskripsi' => 'Lemon Tea Sehat Menyegarkan'
+            ],
+            [
+                'nama_menu' => 'Boba Milk Tea',
+                'harga' => 18000,
+                'foto' => 'lemon-tea.jpg',
+                'deskripsi' => 'Lemon Tea Sehat Menyegarkan'
+            ],
         ];
 
         foreach ($products as $product) {

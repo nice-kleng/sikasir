@@ -1,7 +1,5 @@
-<div>
-    {{-- The best athlete wants his opponent at his best. --}}
+<div class="container-fluid">
     <div class="row">
-
         <!-- Main Content -->
         <div class="col-md-12 main-content p-4">
             <div class="row mb-4">
@@ -38,8 +36,10 @@
                         @foreach ($products as $product)
                             <div class="col-md-4 mb-4">
                                 <div class="card product-card">
-                                    <img src="{{ asset('images/' . $product->foto) }}" class="card-img-top"
-                                        alt="{{ $product->nama_menu }}" style="width: 100%;">
+                                    <div class="product-image-container">
+                                        <img src="{{ asset('images/' . $product->foto) }}"
+                                            class="card-img-top product-image" alt="{{ $product->nama_menu }}">
+                                    </div>
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $product->nama_menu }}</h5>
                                         <p class="card-text text-primary">Rp
@@ -52,6 +52,10 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $products->links() }}
                     </div>
                 </div>
 
@@ -106,13 +110,10 @@
                                     wire:click="$set('paymentMethod', 'cash')">
                                     <i class="fas fa-money-bill-wave mr-2"></i>Tunai
                                 </button>
-                                <button class="btn btn-outline-primary {{ $paymentMethod === 'card' ? 'active' : '' }}"
-                                    wire:click="$set('paymentMethod', 'card')">
-                                    <i class="fas fa-credit-card mr-2"></i>Kartu
-                                </button>
-                                <button class="btn btn-outline-primary {{ $paymentMethod === 'qris' ? 'active' : '' }}"
-                                    wire:click="$set('paymentMethod', 'qris')">
-                                    <i class="fas fa-qrcode mr-2"></i>QRIS
+                                <button
+                                    class="btn btn-outline-primary {{ $paymentMethod === 'online' ? 'active' : '' }}"
+                                    wire:click="$set('paymentMethod', 'online')">
+                                    <i class="fas fa-globe mr-2"></i>Online
                                 </button>
                             </div>
                         </div>
@@ -125,4 +126,36 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .product-image-container {
+            height: 150px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card .btn {
+            margin-top: auto;
+        }
+    </style>
 </div>
