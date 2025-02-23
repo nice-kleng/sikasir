@@ -43,7 +43,7 @@ class TransactionSeeder extends Seeder
                     'nomor_invoice' => $invoiceNumber,
                     'total_pembayaran' => 0, // Initialize with 0
                     'total_pajak' => 0,      // Initialize with 0
-                    'payment_method' => $faker->randomElement(['cash', 'card']),
+                    'payment_method' => $faker->randomElement(['cash', 'online']),
                     'user_id' => 1,
                     'payment_status' => 'paid',
                     'created_at' => $transactionTime,

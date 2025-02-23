@@ -27,3 +27,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/report', [App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
     Route::get('/report/pdf', [App\Http\Controllers\ReportController::class, 'generatePDF'])->name('report.pdf');
 });
+
+
+Route::post('/midtrans/callback', [KasirController::class, 'handle'])->name('midtrans.callback');
