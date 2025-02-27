@@ -8,6 +8,9 @@
                 </div>
                 <div class="col-auto">
                     <div class="btn-group">
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline-info">
+                            <i class="fas fa-arrow-left mr-2"></i>Kembali
+                        </a>
                         <button class="btn btn-outline-primary">
                             <i class="fas fa-user mr-2"></i>Kasir: {{ Auth::user()->name }}
                         </button>

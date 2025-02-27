@@ -3,14 +3,16 @@
         <div class="col">
             <h2>Dashboard</h2>
         </div>
-        <div class="col-auto">
-            <select wire:model.live="periode" class="form-control">
-                <option value="hari">Hari Ini</option>
-                <option value="minggu">Minggu Ini</option>
-                <option value="bulan">Bulan Ini</option>
-                <option value="tahun">Tahun Ini</option>
-            </select>
-        </div>
+        @if (auth()->user()->role == 'admin')
+            <div class="col-auto">
+                <select wire:model.live="periode" class="form-control">
+                    <option value="hari">Hari Ini</option>
+                    <option value="minggu">Minggu Ini</option>
+                    <option value="bulan">Bulan Ini</option>
+                    <option value="tahun">Tahun Ini</option>
+                </select>
+            </div>
+        @endif
     </div>
 
     <!-- Statistik Cards -->
@@ -18,7 +20,7 @@
         <div class="col-md-4">
             <div class="card bg-primary text-white">
                 <div class="card-body">
-                    <h5 class="card-title">Pendapatan Hari Ini</h5>
+                    <h5 class="card-title">Pendapatan Hari Ini</h5>s
                     <h3 class="mb-0">Rp {{ number_format($pendapatan_hari_ini, 0, ',', '.') }}</h3>
                 </div>
             </div>

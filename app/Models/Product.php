@@ -2,12 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $table = 'products';
-    protected $fillable = ['nama_menu', 'harga', 'foto', 'deskripsi'];
+    use HasFactory;
+
+    protected $fillable = [
+        'nama_menu',
+        'harga',
+        'deskripsi',
+        'foto'
+    ];
 
     public function transactionItem()
     {
