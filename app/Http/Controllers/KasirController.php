@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class KasirController extends Controller
 {
@@ -14,6 +15,8 @@ class KasirController extends Controller
 
     public function handle(Request $request)
     {
+        Log::info('Midtrans Callback:', $request->all());
+
         $serverKey = config('midtrans.server_key');
         $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
