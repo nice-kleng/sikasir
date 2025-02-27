@@ -51,8 +51,10 @@ class ProductController extends Controller
             'nama_menu' => 'required',
             'harga' => 'required|numeric',
             'foto' => 'required|image|mimes:png,jpg,jpeg',
+            'kategori' => 'required',
         ], [
             'nama_menu.required' => 'Nama menu harus diisi',
+            'kategori.required' => 'Kategori harus diisi',
             'harga.required' => 'Harga harus diisi',
             'harga.numeric' => 'Harga harus berupa angka',
             'foto.required' => 'Foto harus diupload',
@@ -75,6 +77,7 @@ class ProductController extends Controller
 
             $product = Product::create([
                 'nama_menu' => $request->nama_menu,
+                'kateogri' => $request->kategori,
                 'harga' => $request->harga,
                 'deskripsi' => $request->deskripsi,
                 'foto' => $fileName
@@ -111,6 +114,7 @@ class ProductController extends Controller
     {
         $rules = [
             'nama_menu' => 'required',
+            'kategori' => 'required',
             'harga' => 'required|numeric',
         ];
 
@@ -121,6 +125,7 @@ class ProductController extends Controller
 
         $validator = Validator::make($request->all(), $rules, [
             'nama_menu.required' => 'Nama menu harus diisi',
+            'kategori.required' => 'Kategori harus diisi',
             'harga.required' => 'Harga harus diisi',
             'harga.numeric' => 'Harga harus berupa angka',
             'foto.image' => 'File harus berupa gambar',
@@ -140,6 +145,7 @@ class ProductController extends Controller
                 'nama_menu' => $request->nama_menu,
                 'harga' => $request->harga,
                 'deskripsi' => $request->deskripsi,
+                'kategori' => $request->kategori
             ];
 
             // Proses upload foto baru jika ada

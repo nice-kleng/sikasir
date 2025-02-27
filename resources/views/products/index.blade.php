@@ -18,6 +18,7 @@
                                     <th>NO</th>
                                     <th>Foto</th>
                                     <th>Nama Menu</th>
+                                    <th>Kategori</th>
                                     <th>Harga</th>
                                     <th>Deskripsi</th>
                                     <th>Aksi</th>
@@ -49,6 +50,11 @@
                             <input type="hidden" name="id" id="id">
                             <input type="text" name="nama_menu" id="nama_menu" class="form-control">
                             <small class="text-danger error-text nama_menu_error"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="kategori">Kategori</label>
+                            <input type="text" name="kategori" id="kategori" class="form-control">
+                            <small class="text-danger error-text kategori_error"></small>
                         </div>
                         <div class="form-group">
                             <label for="harga">Harga</label>
@@ -98,6 +104,10 @@
                     {
                         data: 'nama_menu',
                         name: 'nama_menu'
+                    },
+                    {
+                        data: 'kategori',
+                        name: 'kategori'
                     },
                     {
                         data: 'harga',
@@ -188,6 +198,7 @@
                         $('#modalForm').modal('show');
                         $('#id').val(response.id);
                         $('#nama_menu').val(response.nama_menu);
+                        $('kategori').val(response.kategori);
                         $('#harga').val(response.harga);
                         $('#deskripsi').val(response.deskripsi);
                         $('#modalFormLabel').text("Update Menu/Product");
