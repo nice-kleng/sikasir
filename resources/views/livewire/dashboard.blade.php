@@ -20,7 +20,7 @@
         <div class="col-md-4">
             <div class="card bg-primary text-white">
                 <div class="card-body">
-                    <h5 class="card-title">Pendapatan Hari Ini</h5>s
+                    <h5 class="card-title">Pendapatan Hari Ini</h5>
                     <h3 class="mb-0">Rp {{ number_format($pendapatan_hari_ini, 0, ',', '.') }}</h3>
                 </div>
             </div>

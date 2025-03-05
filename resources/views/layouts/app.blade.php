@@ -51,11 +51,13 @@
                     <span>Dashboard</span></a>
             </li>
 
-            <li class="nav-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('products.index') }}">
-                    <i class="fas fa-fw fa-utensils"></i>
-                    <span>Product</span></a>
-            </li>
+            @if (auth()->user()->isAdmin())
+                <li class="nav-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('products.index') }}">
+                        <i class="fas fa-fw fa-utensils"></i>
+                        <span>Product</span></a>
+                </li>
+            @endif
 
             <li class="nav-item {{ request()->routeIs('kasir.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('kasir.index') }}">
@@ -63,12 +65,13 @@
                     <span>Kasir</span></a>
             </li>
 
-
-            <li class="nav-item {{ request()->routeIs('report.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('report.index') }}">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                    <span>Laporan</span></a>
-            </li>
+            @if (auth()->user()->isAdmin())
+                <li class="nav-item {{ request()->routeIs('report.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('report.index') }}">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Laporan</span></a>
+                </li>
+            @endif
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
