@@ -44,6 +44,8 @@
                                             class="card-img-top product-image" alt="{{ $product->nama_menu }}">
                                     </div>
                                     <div class="card-body">
+                                        <small
+                                            class="text-{{ $product->status === 'Tersedia' ? 'success' : 'danger' }} mb-2 d-block">{{ $product->status }}</small>
                                         <h5 class="card-title">{{ $product->nama_menu }}</h5>
                                         <p class="card-text text-primary">Rp
                                             {{ number_format($product->harga, 0, ',', '.') }}</p>

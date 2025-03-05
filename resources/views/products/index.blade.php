@@ -20,6 +20,7 @@
                                     <th>Nama Menu</th>
                                     <th>Kategori</th>
                                     <th>Harga</th>
+                                    <th>Ketersediaan</th>
                                     <th>Deskripsi</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -71,6 +72,13 @@
                             <textarea name="deskripsi" id="deskripsi" cols="30" rows="5" class="form-control"></textarea>
                             <small class="text-danger error-text deskripsi_error"></small>
                         </div>
+                        <div class="form">
+                            <label for="status">Ketersediaan</label>
+                            <select name="status" id="status" class="form-control" required>
+                                <option value="Tersedia">Tersedia</option>
+                                <option value="Tidak Tersedia">Tidak Tersedia</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -114,6 +122,10 @@
                         name: 'harga'
                     },
                     {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
                         data: 'deskripsi',
                         name: 'deskripsi'
                     },
@@ -144,15 +156,19 @@
                 let id = $('#id').val();
                 let url = id ? "{{ route('products.update', ':product') }}".replace(':product', id) :
                     "{{ route('products.store') }}";
-                let method = id ? 'PUT' : 'POST';
+
+                if (id) {
+                    formData.append('_method', 'PUT');
+                }
 
                 $.ajax({
-                    type: method,
+                    type: 'POST',
                     url: url,
                     data: formData,
                     dataType: "json",
                     contentType: false,
                     processData: false,
+                    cache: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -198,9 +214,10 @@
                         $('#modalForm').modal('show');
                         $('#id').val(response.id);
                         $('#nama_menu').val(response.nama_menu);
-                        $('kategori').val(response.kategori);
+                        $('#kategori').val(response.kategori);
                         $('#harga').val(response.harga);
                         $('#deskripsi').val(response.deskripsi);
+                        $('#status').val(response.status).trigger('change');
                         $('#modalFormLabel').text("Update Menu/Product");
                     },
                     error: function(xhr, status, error) {

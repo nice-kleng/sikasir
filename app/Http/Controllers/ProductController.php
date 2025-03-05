@@ -27,7 +27,11 @@ class ProductController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['foto', 'action'])
+                ->addColumn('status', function ($row) {
+                    $status = $row->status == 'Tersedia' ? '<span class="badge badge-success">Tersedia</span>' : '<span class="badge badge-danger">Tidak Tersedia</span>';
+                    return $status;
+                })
+                ->rawColumns(['foto', 'action', 'status'])
                 ->make(true);
         }
 
@@ -77,9 +81,10 @@ class ProductController extends Controller
 
             $product = Product::create([
                 'nama_menu' => $request->nama_menu,
-                'kateogri' => $request->kategori,
+                'kategori' => $request->kategori,
                 'harga' => $request->harga,
                 'deskripsi' => $request->deskripsi,
+                'status' => $request->status,
                 'foto' => $fileName
             ]);
 
@@ -145,7 +150,8 @@ class ProductController extends Controller
                 'nama_menu' => $request->nama_menu,
                 'harga' => $request->harga,
                 'deskripsi' => $request->deskripsi,
-                'kategori' => $request->kategori
+                'kategori' => $request->kategori,
+                'status' => $request->status
             ];
 
             // Proses upload foto baru jika ada

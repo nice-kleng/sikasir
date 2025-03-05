@@ -67,8 +67,16 @@ class Kasir extends Component
 
     public function processPayment()
     {
+        if (empty($this->cart)) {
+            $this->dispatch('showAlert', [
+                'type' => 'error',
+                'message' => 'Pilih minimal 1 menu terlebih dahulu!'
+            ]);
+            return;
+        }
+
         $transaction = Transaction::create([
-            'nomor_invoice' => 'INV-' . time(),
+            'nomor_invoice' => 'INV/' . now(),
             'total_pembayaran' => $this->total,
             'total_pajak' => $this->tax,
             'payment_method' => $this->paymentMethod,

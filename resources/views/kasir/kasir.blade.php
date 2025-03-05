@@ -63,6 +63,11 @@
         Livewire.on('paymentClosed', () => {
             alert('Pembayaran dibatalkan');
         });
+
+        // Add this new event listener
+        Livewire.on('showAlert', data => {
+            alert(data[0].message);
+        });
     </script>
 </body>
 
