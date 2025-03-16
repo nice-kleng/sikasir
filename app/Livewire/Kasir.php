@@ -19,6 +19,9 @@ class Kasir extends Component
     public $searchQuery = '';
     public $paymentMethod = 'cash';
     public $snapToken;
+    public $cashAmount = 0; // Jumlah uang yang diberikan customer
+    public $showPaymentInput = false; // Flag untuk menampilkan input pembayaran
+    public $currentTransactionId = null; // Untuk menyimpan ID transaksi setelah proses pembayaran
 
     // Computed properties
     public function getSubtotalProperty()
@@ -34,6 +37,11 @@ class Kasir extends Component
     public function getTotalProperty()
     {
         return $this->subtotal + $this->tax;
+    }
+
+    public function getChangeProperty()
+    {
+        return max(0, $this->cashAmount - $this->total);
     }
 
     // Methods
@@ -65,6 +73,23 @@ class Kasir extends Component
         }
     }
 
+    public function preparePayment()
+    {
+        if (empty($this->cart)) {
+            $this->dispatch('showAlert', [
+                'type' => 'error',
+                'message' => 'Pilih minimal 1 menu terlebih dahulu!'
+            ]);
+            return;
+        }
+
+        if ($this->paymentMethod === 'cash') {
+            $this->showPaymentInput = true;
+        } else {
+            $this->processPayment();
+        }
+    }
+
     public function processPayment()
     {
         if (empty($this->cart)) {
@@ -75,14 +100,29 @@ class Kasir extends Component
             return;
         }
 
+        // Validasi untuk pembayaran cash
+        if ($this->paymentMethod === 'cash' && $this->cashAmount < $this->total) {
+            $this->dispatch('showAlert', [
+                'type' => 'error',
+                'message' => 'Jumlah uang yang diberikan kurang dari total pembayaran!'
+            ]);
+            return;
+        }
+
+        $invoiceNumber = 'INV-' . date('Ymd') . '-' . rand(1000, 9999);
+
         $transaction = Transaction::create([
-            'nomor_invoice' => 'INV/' . now(),
+            'nomor_invoice' => $invoiceNumber,
             'total_pembayaran' => $this->total,
             'total_pajak' => $this->tax,
             'payment_method' => $this->paymentMethod,
             'user_id' => auth()->id(),
-            'payment_status' => $this->paymentMethod === 'cash' ? 'paid' : 'pending'
+            'payment_status' => $this->paymentMethod === 'cash' ? 'paid' : 'pending',
+            'cash_amount' => $this->paymentMethod === 'cash' ? $this->cashAmount : null,
+            'cash_change' => $this->paymentMethod === 'cash' ? $this->change : null
         ]);
+
+        $this->currentTransactionId = $transaction->id;
 
         foreach ($this->cart as $productId => $item) {
             TransactionItem::create([
@@ -95,8 +135,11 @@ class Kasir extends Component
         }
 
         if ($this->paymentMethod === 'cash') {
-            $this->cart = [];
-            $this->dispatch('paymentSuccess', ['message' => 'Pembayaran tunai berhasil!']);
+            $this->resetPayment();
+            $this->dispatch('paymentSuccess', [
+                'message' => 'Pembayaran tunai berhasil!',
+                'transactionId' => $transaction->id
+            ]);
             return;
         }
 
@@ -107,10 +150,27 @@ class Kasir extends Component
         if ($snapToken) {
             $transaction->update(['snap_token' => $snapToken]);
             $this->snapToken = $snapToken;
-            $this->dispatch('showPaymentModal', ['snapToken' => $snapToken]);
+            $this->dispatch('showPaymentModal', [
+                'snapToken' => $snapToken,
+                'transactionId' => $transaction->id
+            ]);
         } else {
             $this->dispatch('paymentError', ['message' => 'Gagal memproses pembayaran']);
         }
+    }
+
+    public function resetPayment()
+    {
+        $this->cart = [];
+        $this->cashAmount = 0;
+        $this->showPaymentInput = false;
+        $this->currentTransactionId = null;
+    }
+
+    public function cancelCashPayment()
+    {
+        $this->showPaymentInput = false;
+        $this->cashAmount = 0;
     }
 
     public function render()

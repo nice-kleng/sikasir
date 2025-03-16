@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\TransactionItem;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -28,7 +30,7 @@ class KasirController extends Controller
             $orderId = $request->order_id;
             $fraud = $request->fraud_status;
 
-            $paymentStatus = match($transactionStatus) {
+            $paymentStatus = match ($transactionStatus) {
                 'capture' => ($type == 'credit_card' && $fraud == 'challenge') ? 'pending' : 'paid',
                 'settlement' => 'paid',
                 'pending' => 'pending',
@@ -51,5 +53,17 @@ class KasirController extends Controller
             'status' => 'error',
             'message' => 'Invalid signature'
         ], 400);
+    }
+
+    public function printNota($transaction_id)
+    {
+        $transaction = Transaction::with(['items.product', 'user'])
+            ->findOrFail($transaction_id);
+
+        $customPaper = array(0, 0, 226.772, 850.394); // 80mm x 297mm in points
+        $pdf = Pdf::loadView('kasir.nota', compact('transaction'));
+        $pdf->setPaper($customPaper, 'portrait');
+
+        return $pdf->stream('Nota-' . $transaction->nomor_invoice . '.pdf');
     }
 }

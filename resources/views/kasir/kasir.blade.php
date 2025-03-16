@@ -47,10 +47,10 @@
             }
         });
 
-        Livewire.on('paymentSuccess', result => {
-            alert(result.message || 'Pembayaran berhasil!');
-            window.location.reload();
-        });
+        // Livewire.on('paymentSuccess', result => {
+        //     alert(result.message || 'Pembayaran berhasil!');
+        //     // window.location.reload();
+        // });
 
         Livewire.on('paymentPending', result => {
             alert('Pembayaran dalam proses!');
@@ -69,6 +69,7 @@
             alert(data[0].message);
         });
     </script>
+    @stack('scripts')
 </body>
 
 </html>

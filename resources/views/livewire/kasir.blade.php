@@ -109,28 +109,66 @@
                             </div>
                         </div>
 
-                        <div class="payment-methods mb-4">
-                            <div class="btn-group d-flex">
-                                <button class="btn btn-outline-primary {{ $paymentMethod === 'cash' ? 'active' : '' }}"
-                                    wire:click="$set('paymentMethod', 'cash')">
-                                    <i class="fas fa-money-bill-wave mr-2"></i>Tunai
-                                </button>
-                                <button
-                                    class="btn btn-outline-primary {{ $paymentMethod === 'online' ? 'active' : '' }}"
-                                    wire:click="$set('paymentMethod', 'online')">
-                                    <i class="fas fa-globe mr-2"></i>Online
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Payment Input Section (for cash) -->
+                        @if ($showPaymentInput && $paymentMethod === 'cash')
+                            <div class="payment-input mb-4">
+                                <div class="form-group">
+                                    <label for="cashAmount">Jumlah Uang Diterima</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Rp</span>
+                                        </div>
+                                        <input type="number" id="cashAmount" class="form-control"
+                                            wire:model.live="cashAmount" min="{{ $this->total }}">
+                                    </div>
+                                </div>
 
-                        <button class="btn btn-primary btn-lg btn-block" wire:click="processPayment">
-                            <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
-                        </button>
+                                <div class="change-info alert alert-info mt-3">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Kembalian:</strong>
+                                        <strong>Rp {{ number_format($this->change, 0, ',', '.') }}</strong>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between mt-3">
+                                    <button class="btn btn-outline-danger" wire:click="cancelCashPayment">
+                                        <i class="fas fa-times mr-2"></i>Batal
+                                    </button>
+                                    <button class="btn btn-success" wire:click="processPayment"
+                                        {{ $cashAmount < $this->total ? 'disabled' : '' }}>
+                                        <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
+                                    </button>
+                                </div>
+                            </div>
+                        @else
+                            <div class="payment-methods mb-4">
+                                <div class="btn-group d-flex">
+                                    <button
+                                        class="btn btn-outline-primary {{ $paymentMethod === 'cash' ? 'active' : '' }}"
+                                        wire:click="$set('paymentMethod', 'cash')">
+                                        <i class="fas fa-money-bill-wave mr-2"></i>Tunai
+                                    </button>
+                                    <button
+                                        class="btn btn-outline-primary {{ $paymentMethod === 'online' ? 'active' : '' }}"
+                                        wire:click="$set('paymentMethod', 'online')">
+                                        <i class="fas fa-globe mr-2"></i>Online
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block" wire:click="preparePayment">
+                                <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Form untuk print nota -->
+    <form id="print-form" method="GET" target="_blank" class="d-none">
+    </form>
 
     <style>
         .product-image-container {
@@ -163,4 +201,76 @@
             margin-top: auto;
         }
     </style>
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('livewire:initialized', () => {
+                // Handle payment success (for both cash and online)
+                @this.on('paymentSuccess', (data) => {
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Automatically print nota
+                        printNota(data[0].transactionId);
+                    });
+                });
+
+                // Handle payment modal for online payment
+                // @this.on('showPaymentModal', (data) => {
+                //     // Simpan transaction ID untuk cetak nota nanti
+                //     window.currentTransactionId = data.transactionId;
+
+                //     // Tampilkan modal pembayaran Midtrans
+                //     snap.pay(data.snapToken, {
+                //         onSuccess: function(result) {
+                //             @this.dispatch('paymentCallback', {
+                //                 status: 'success',
+                //                 data: result
+                //             });
+                //             // Cetak nota setelah pembayaran berhasil
+                //             printNota(window.currentTransactionId);
+                //         },
+                //         onPending: function(result) {
+                //             @this.dispatch('paymentCallback', {
+                //                 status: 'pending',
+                //                 data: result
+                //             });
+                //         },
+                //         onError: function(result) {
+                //             @this.dispatch('paymentCallback', {
+                //                 status: 'error',
+                //                 data: result
+                //             });
+                //         },
+                //         onClose: function() {
+                //             @this.dispatch('paymentCallback', {
+                //                 status: 'closed'
+                //             });
+                //         }
+                //     });
+                // });
+
+                // Handle payment error
+                @this.on('paymentError', (data) => {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            });
+
+            // Fungsi untuk cetak nota
+            function printNota(transactionId) {
+                const form = document.getElementById('print-form');
+                form.action = `/kasir/print-nota/${transactionId}`;
+                form.submit();
+            }
+        </script>
+    @endpush
 </div>

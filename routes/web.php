@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/products', ProductController::class);
 
     Route::get('/kasir', [KasirController::class, 'index'])->name('kasir.index');
+    Route::get('/kasir/print-nota/{transaction_id}', [KasirController::class, 'printNota'])->name('kasir.print-nota');
     Route::get('/report', [App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
     Route::get('/report/pdf', [App\Http\Controllers\ReportController::class, 'generatePDF'])->name('report.pdf');
 });
