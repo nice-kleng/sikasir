@@ -216,43 +216,43 @@
                     }).then(() => {
                         // Automatically print nota
                         printNota(data[0].transactionId);
+                        @this.call('resetPayment');
                     });
                 });
 
-                // Handle payment modal for online payment
-                // @this.on('showPaymentModal', (data) => {
-                //     // Simpan transaction ID untuk cetak nota nanti
-                //     window.currentTransactionId = data.transactionId;
+                @this.on('showPaymentModal', (data) => {
+                    // Simpan transaction ID untuk cetak nota nanti
+                    window.currentTransactionId = data.transactionId;
 
-                //     // Tampilkan modal pembayaran Midtrans
-                //     snap.pay(data.snapToken, {
-                //         onSuccess: function(result) {
-                //             @this.dispatch('paymentCallback', {
-                //                 status: 'success',
-                //                 data: result
-                //             });
-                //             // Cetak nota setelah pembayaran berhasil
-                //             printNota(window.currentTransactionId);
-                //         },
-                //         onPending: function(result) {
-                //             @this.dispatch('paymentCallback', {
-                //                 status: 'pending',
-                //                 data: result
-                //             });
-                //         },
-                //         onError: function(result) {
-                //             @this.dispatch('paymentCallback', {
-                //                 status: 'error',
-                //                 data: result
-                //             });
-                //         },
-                //         onClose: function() {
-                //             @this.dispatch('paymentCallback', {
-                //                 status: 'closed'
-                //             });
-                //         }
-                //     });
-                // });
+                    // Tampilkan modal pembayaran Midtrans
+                    snap.pay(data.snapToken, {
+                        onSuccess: function(result) {
+                            @this.dispatch('paymentCallback', {
+                                status: 'success',
+                                data: result
+                            });
+                            // Cetak nota setelah pembayaran berhasil
+                            printNota(window.currentTransactionId);
+                        },
+                        onPending: function(result) {
+                            @this.dispatch('paymentCallback', {
+                                status: 'pending',
+                                data: result
+                            });
+                        },
+                        onError: function(result) {
+                            @this.dispatch('paymentCallback', {
+                                status: 'error',
+                                data: result
+                            });
+                        },
+                        onClose: function() {
+                            @this.dispatch('paymentCallback', {
+                                status: 'closed'
+                            });
+                        }
+                    });
+                });
 
                 // Handle payment error
                 @this.on('paymentError', (data) => {
@@ -261,8 +261,28 @@
                         text: data.message,
                         icon: 'error',
                         confirmButtonText: 'OK'
+                    }).then(() => {
+                        @this.call('resetPayment');
                     });
                 });
+
+                @this.on('paymentPending', result => {
+                    Swal.fire({
+                        title: 'Info',
+                        text: 'Pembayaran dalam proses',
+                        icon: 'info',
+                        confirmButtonText: 'OK'
+                    });
+                });
+
+                @this.on('showAlert', result => {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: result[0].message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                })
             });
 
             // Fungsi untuk cetak nota

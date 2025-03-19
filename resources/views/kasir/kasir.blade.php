@@ -24,41 +24,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        window.addEventListener('showPaymentModal', event => {
-            if (event.detail[0].snapToken) {
-                snap.pay(event.detail[0].snapToken, {
-                    onSuccess: function(result) {
-                        console.log('Success:', result);
-                        Livewire.dispatch('paymentSuccess', result);
-                    },
-                    onPending: function(result) {
-                        console.log('Pending:', result);
-                        Livewire.dispatch('paymentPending', result);
-                    },
-                    onError: function(result) {
-                        console.error('Error:', result);
-                        Livewire.dispatch('paymentError', result);
-                    },
-                    onClose: function() {
-                        console.log('Customer closed the popup without finishing the payment');
-                        Livewire.dispatch('paymentClosed');
-                    }
-                });
-            }
-        });
+        // window.addEventListener('showPaymentModal', event => {
+        //     if (event.detail[0].snapToken) {
+        //         snap.pay(event.detail[0].snapToken, {
+        //             onSuccess: function(result) {
+        //                 console.log('Success:', result);
+        //                 Livewire.dispatch('paymentSuccess', result);
+        //             },
+        //             onPending: function(result) {
+        //                 console.log('Pending:', result);
+        //                 Livewire.dispatch('paymentPending', result);
+        //             },
+        //             onError: function(result) {
+        //                 console.error('Error:', result);
+        //                 Livewire.dispatch('paymentError', result);
+        //             },
+        //             onClose: function() {
+        //                 console.log('Customer closed the popup without finishing the payment');
+        //                 Livewire.dispatch('paymentClosed');
+        //             }
+        //         });
+        //     }
+        // });
 
         // Livewire.on('paymentSuccess', result => {
         //     alert(result.message || 'Pembayaran berhasil!');
         //     // window.location.reload();
         // });
 
-        Livewire.on('paymentPending', result => {
-            alert('Pembayaran dalam proses!');
-        });
+        // Livewire.on('paymentPending', result => {
+        //     alert('Pembayaran dalam proses!');
+        // });
 
-        Livewire.on('paymentError', result => {
-            alert('Pembayaran gagal: ' + result.message);
-        });
+        // Livewire.on('paymentError', result => {
+        //     alert('Pembayaran gagal: ' + result.message);
+        // });
 
         Livewire.on('paymentClosed', () => {
             alert('Pembayaran dibatalkan');

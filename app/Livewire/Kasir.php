@@ -155,6 +155,7 @@ class Kasir extends Component
                 'transactionId' => $transaction->id
             ]);
         } else {
+            $this->resetPayment();
             $this->dispatch('paymentError', ['message' => 'Gagal memproses pembayaran']);
         }
     }
@@ -165,6 +166,7 @@ class Kasir extends Component
         $this->cashAmount = 0;
         $this->showPaymentInput = false;
         $this->currentTransactionId = null;
+        $this->render();
     }
 
     public function cancelCashPayment()
