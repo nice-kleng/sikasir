@@ -40,7 +40,7 @@
                             <div class="col-md-4 mb-4">
                                 <div class="card product-card">
                                     <div class="product-image-container">
-                                        <img src="{{ asset('images/' . $product->foto) }}"
+                                        <img src="{{ asset('storage/' . $product->foto) }}"
                                             class="card-img-top product-image" alt="{{ $product->nama_menu }}">
                                     </div>
                                     <div class="card-body">

@@ -52,6 +52,12 @@
             </li>
 
             @if (auth()->user()->isAdmin())
+                <li class="nav-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('kategori.index') }}">
+                        <i class="fas fa-fw fa-list"></i>
+                        <span>Kategori Product</span></a>
+                </li>
+
                 <li class="nav-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('products.index') }}">
                         <i class="fas fa-fw fa-utensils"></i>
@@ -70,6 +76,11 @@
                     <a class="nav-link" href="{{ route('report.index') }}">
                         <i class="fas fa-file-invoice-dollar"></i>
                         <span>Laporan</span></a>
+                </li>
+                <li class="nav-item {{ request()->routeIs('setting.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('setting.index') }}">
+                        <i class="fas fa-cog"></i>
+                        <span>Setting</span></a>
                 </li>
             @endif
 

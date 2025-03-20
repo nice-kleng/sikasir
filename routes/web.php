@@ -30,6 +30,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
     Route::post('/setting', [App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');
+
+    Route::resource('/kategori', App\Http\Controllers\KategoriController::class);
 });
 
 

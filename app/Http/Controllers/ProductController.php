@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kategori;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,13 +21,16 @@ class ProductController extends Controller
             return DataTables::of($products)
                 ->addIndexColumn('DT_RowIndex')
                 ->addColumn('foto', function ($row) {
-                    return '<img src="' . asset('images/' . $row->foto) . '" alt="Foto Product ' . $row->nama_menu . '" class="img-thumbnail" width="100">';
+                    return '<img src="' . asset('storage/' . $row->foto) . '" alt="Foto Product ' . $row->nama_menu . '" class="img-thumbnail" width="100">';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" class="btn btn-warning btn-sm btnedit" data-id="' . $row->id . '"><i class="fas fa-edit"></i> Edit</a> ';
                     $btn .= '<a href="javascript:void(0)" class="btn btn-danger btn-sm btndestroy" data-id="' . $row->id . '"><i class="fas fa-trash"></i> Hapus</a>';
 
                     return $btn;
+                })
+                ->addColumn('kategori', function ($row) {
+                    return $row->kategori->nama_kategori;
                 })
                 ->addColumn('status', function ($row) {
                     $status = $row->status == 'Tersedia' ? '<span class="badge badge-success">Tersedia</span>' : '<span class="badge badge-danger">Tidak Tersedia</span>';
@@ -35,7 +40,8 @@ class ProductController extends Controller
                 ->make(true);
         }
 
-        return view('products.index');
+        $kategori = Kategori::orderBy('nama_kategori', 'asc')->get();
+        return view('products.index', compact('kategori'));
     }
 
     /**
@@ -77,15 +83,15 @@ class ProductController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images'), $fileName);
+            $path = $file->storeAs('images', $fileName);
 
             $product = Product::create([
                 'nama_menu' => $request->nama_menu,
-                'kategori' => $request->kategori,
+                'kategori_id' => $request->kategori,
                 'harga' => $request->harga,
                 'deskripsi' => $request->deskripsi,
                 'status' => $request->status,
-                'foto' => $fileName
+                'foto' => $path
             ]);
 
             return response()->json([
@@ -150,15 +156,18 @@ class ProductController extends Controller
                 'nama_menu' => $request->nama_menu,
                 'harga' => $request->harga,
                 'deskripsi' => $request->deskripsi,
-                'kategori' => $request->kategori,
+                'kategori_id' => $request->kategori,
                 'status' => $request->status
             ];
 
             // Proses upload foto baru jika ada
             if ($request->hasFile('foto')) {
                 // Hapus foto lama
-                if ($product->foto && file_exists(public_path('images/' . $product->foto))) {
-                    unlink(public_path('images/' . $product->foto));
+                // if ($product->foto && file_exists(public_path('images/' . $product->foto))) {
+                //     unlink(public_path('images/' . $product->foto));
+                // }
+                if ($product->foto && Storage::exists(asset('storage/' . $product->foto))) {
+                    Storage::delete(asset('storage/' . $product->foto));
                 }
 
                 $file = $request->file('foto');
@@ -190,8 +199,8 @@ class ProductController extends Controller
     {
         try {
             // Hapus foto dari storage jika ada
-            if ($product->foto && file_exists(public_path('images/' . $product->foto))) {
-                unlink(public_path('images/' . $product->foto));
+            if ($product->foto && Storage::exists('storage/' . $product->foto)) {
+                Storage::delete('storage/' . $product->foto);
             }
 
             // Hapus data dari database

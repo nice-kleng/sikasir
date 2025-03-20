@@ -54,7 +54,12 @@
                         </div>
                         <div class="form-group">
                             <label for="kategori">Kategori</label>
-                            <input type="text" name="kategori" id="kategori" class="form-control">
+                            <select name="kategori" id="kategori" class="form-control" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                @foreach ($kategori as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nama_kategori }}</option>
+                                @endforeach
+                            </select>
                             <small class="text-danger error-text kategori_error"></small>
                         </div>
                         <div class="form-group">
@@ -214,7 +219,7 @@
                         $('#modalForm').modal('show');
                         $('#id').val(response.id);
                         $('#nama_menu').val(response.nama_menu);
-                        $('#kategori').val(response.kategori);
+                        $('#kategori').val(response.kategori_id).trigger('change');
                         $('#harga').val(response.harga);
                         $('#deskripsi').val(response.deskripsi);
                         $('#status').val(response.status).trigger('change');

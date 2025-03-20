@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use PDF;
 
 class ReportController extends Controller
 {
@@ -16,7 +16,7 @@ class ReportController extends Controller
             $query->whereBetween('created_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);
         }
 
-        $transactions = $query->paginate(10)->withQueryString();
+        $transactions = $query->paginate(10);
 
         return view('report', compact('transactions'));
     }
@@ -31,8 +31,8 @@ class ReportController extends Controller
 
         $transactions = $query->get();
 
-        $pdf = PDF::loadView('reports.pdf', compact('transactions'));
+        $pdf = Pdf::loadView('reports.pdf', compact('transactions'));
 
-        return $pdf->download('transaction-report.pdf');
+        return $pdf->stream('transaction-report.pdf');
     }
 }
