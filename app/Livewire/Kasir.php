@@ -19,6 +19,8 @@ class Kasir extends Component
     public $searchQuery = '';
     public $paymentMethod = 'cash';
     public $snapToken;
+    public $nama_konsumen;
+    public $no_table;
     public $cashAmount = 0; // Jumlah uang yang diberikan customer
     public $showPaymentInput = false; // Flag untuk menampilkan input pembayaran
     public $currentTransactionId = null; // Untuk menyimpan ID transaksi setelah proses pembayaran
@@ -119,7 +121,9 @@ class Kasir extends Component
             'user_id' => auth()->id(),
             'payment_status' => $this->paymentMethod === 'cash' ? 'paid' : 'pending',
             'cash_amount' => $this->paymentMethod === 'cash' ? $this->cashAmount : null,
-            'cash_change' => $this->paymentMethod === 'cash' ? $this->change : null
+            'cash_change' => $this->paymentMethod === 'cash' ? $this->change : null,
+            'nama_konsumen' => $this->nama_konsumen,
+            'no_table' => $this->no_table,
         ]);
 
         $this->currentTransactionId = $transaction->id;
@@ -166,6 +170,7 @@ class Kasir extends Component
         $this->cashAmount = 0;
         $this->showPaymentInput = false;
         $this->currentTransactionId = null;
+        $this->reset(['nama_konsumen', 'no_table']);
         $this->render();
     }
 

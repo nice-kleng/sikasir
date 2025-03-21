@@ -103,9 +103,24 @@
                                 <span>Rp {{ number_format($this->tax, 0, ',', '.') }}</span>
                             </div>
                             <hr>
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between mb-3">
                                 <h5>Total</h5>
                                 <h5 class="text-primary">Rp {{ number_format($this->total, 0, ',', '.') }}</h5>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nama_konsumen" class="form-label">Nama Pemesan</label>
+                                        <input type="text" id="nama_konsumen" class="form-control"
+                                            wire:model="nama_konsumen">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="no_table" class="form-label">Nomor Meja</label>
+                                        <input type="text" id="no_table" class="form-control" wire:model="no_table">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

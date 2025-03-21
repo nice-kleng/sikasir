@@ -133,6 +133,7 @@
         <div class="info">
             <div class="info-item">#{{ $transaction->nomor_invoice }}</div>
             <div class="info-item">{{ $transaction->created_at->format('d/m/Y H:i') }}</div>
+            <div class="info-item">{{ $transaction->nama_konsumen }} | Meja {{ $transaction->no_table }}</div>
             <div class="info-item">{{ $transaction->user->name }} |
                 {{ $transaction->payment_method === 'cash' ? 'Tunai' : 'Online' }}</div>
         </div>

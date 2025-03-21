@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    protected $fillable = ['nomor_invoice', 'total_pembayaran', 'total_pajak', 'payment_method', 'user_id', 'payment_status', 'snap_token', 'midtrans_transaction_id', 'midtrans_payment_type', 'notes', 'cash_amount', 'cash_change'];
+    protected $fillable = ['nomor_invoice', 'total_pembayaran', 'total_pajak', 'payment_method', 'user_id', 'payment_status', 'snap_token', 'midtrans_transaction_id', 'midtrans_payment_type', 'notes', 'cash_amount', 'cash_change', 'nama_konsumen', 'no_table'];
 
     public function items()
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kategori;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -83,7 +84,7 @@ class ProductController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('images', $fileName);
+            $path = $file->storeAs('images', $fileName, 'public');
 
             $product = Product::create([
                 'nama_menu' => $request->nama_menu,
@@ -166,8 +167,8 @@ class ProductController extends Controller
                 // if ($product->foto && file_exists(public_path('images/' . $product->foto))) {
                 //     unlink(public_path('images/' . $product->foto));
                 // }
-                if ($product->foto && Storage::exists(asset('storage/' . $product->foto))) {
-                    Storage::delete(asset('storage/' . $product->foto));
+                if ($product->foto && Storage::exists($product->foto)) {
+                    Storage::delete($product->foto);
                 }
 
                 $file = $request->file('foto');
@@ -199,8 +200,8 @@ class ProductController extends Controller
     {
         try {
             // Hapus foto dari storage jika ada
-            if ($product->foto && Storage::exists('storage/' . $product->foto)) {
-                Storage::delete('storage/' . $product->foto);
+            if ($product->foto && Storage::exists($product->foto)) {
+                Storage::delete($product->foto);
             }
 
             // Hapus data dari database
