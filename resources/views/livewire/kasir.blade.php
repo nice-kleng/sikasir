@@ -8,6 +8,13 @@
                 </div>
                 <div class="col-auto">
                     <div class="btn-group">
+                        @if (count($unpaidTransactions) > 0)
+                            <button type="button" class="btn btn-warning" data-toggle="modal"
+                                data-target="#unpaidOrdersModal">
+                                <i class="fas fa-clock mr-2"></i>
+                                Pesanan Belum Dibayar ({{ count($unpaidTransactions) }})
+                            </button>
+                        @endif
                         <a href="{{ route('dashboard') }}" class="btn btn-outline-info">
                             <i class="fas fa-arrow-left mr-2"></i>Kembali
                         </a>
@@ -124,58 +131,164 @@
                             </div>
                         </div>
 
-                        <!-- Payment Input Section (for cash) -->
-                        @if ($showPaymentInput && $paymentMethod === 'cash')
-                            <div class="payment-input mb-4">
-                                <div class="form-group">
-                                    <label for="cashAmount">Jumlah Uang Diterima</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Rp</span>
-                                        </div>
-                                        <input type="number" id="cashAmount" class="form-control"
-                                            wire:model.live="cashAmount" min="{{ $this->total }}">
+                        @if (!empty($cart))
+                            @if (!$paymentChoice && !$editingTransactionId)
+                                <div class="payment-choice mb-4">
+                                    <h5>Pilih Metode:</h5>
+                                    <div class="btn-group d-flex">
+                                        <button class="btn btn-outline-primary" wire:click="choosePaymentTiming('now')">
+                                            Bayar Sekarang
+                                        </button>
+                                        <button class="btn btn-outline-secondary" wire:click="saveOrder">
+                                            Bayar Nanti
+                                        </button>
                                     </div>
                                 </div>
+                            @endif
 
-                                <div class="change-info alert alert-info mt-3">
-                                    <div class="d-flex justify-content-between">
-                                        <strong>Kembalian:</strong>
-                                        <strong>Rp {{ number_format($this->change, 0, ',', '.') }}</strong>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex justify-content-between mt-3">
-                                    <button class="btn btn-outline-danger" wire:click="cancelCashPayment">
-                                        <i class="fas fa-times mr-2"></i>Batal
+                            @if ($editingTransactionId && !$paymentChoice)
+                                <div class="d-flex justify-content-between mb-4">
+                                    <button class="btn btn-secondary" wire:click="resetAll">
+                                        Batal Edit
                                     </button>
-                                    <button class="btn btn-success" wire:click="processPayment"
-                                        {{ $cashAmount < $this->total ? 'disabled' : '' }}>
+                                    <button class="btn btn-primary" wire:click="saveOrder">
+                                        Simpan Perubahan
+                                    </button>
+                                </div>
+                            @endif
+
+                            @if ($paymentChoice === 'now' && $showPaymentMethodSelection)
+                                <div class="payment-methods mb-4">
+                                    <div class="btn-group d-flex">
+                                        <button
+                                            class="btn btn-outline-primary {{ $paymentMethod === 'cash' ? 'active' : '' }}"
+                                            wire:click="$set('paymentMethod', 'cash')">
+                                            <i class="fas fa-money-bill-wave mr-2"></i>Tunai
+                                        </button>
+                                        <button
+                                            class="btn btn-outline-primary {{ $paymentMethod === 'online' ? 'active' : '' }}"
+                                            wire:click="$set('paymentMethod', 'online')">
+                                            <i class="fas fa-globe mr-2"></i>Online
+                                        </button>
+                                    </div>
+
+                                    <button class="btn btn-primary btn-lg btn-block mt-3" wire:click="preparePayment">
                                         <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
                                     </button>
                                 </div>
-                            </div>
-                        @else
-                            <div class="payment-methods mb-4">
-                                <div class="btn-group d-flex">
-                                    <button
-                                        class="btn btn-outline-primary {{ $paymentMethod === 'cash' ? 'active' : '' }}"
-                                        wire:click="$set('paymentMethod', 'cash')">
-                                        <i class="fas fa-money-bill-wave mr-2"></i>Tunai
-                                    </button>
-                                    <button
-                                        class="btn btn-outline-primary {{ $paymentMethod === 'online' ? 'active' : '' }}"
-                                        wire:click="$set('paymentMethod', 'online')">
-                                        <i class="fas fa-globe mr-2"></i>Online
-                                    </button>
-                                </div>
-                            </div>
+                            @endif
 
-                            <button class="btn btn-primary btn-lg btn-block" wire:click="preparePayment">
-                                <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
-                            </button>
+                            @if ($paymentChoice === 'now')
+                                <!-- Payment Input Section (for cash) -->
+                                @if ($showPaymentInput && $paymentMethod === 'cash')
+                                    <div class="payment-input mb-4">
+                                        <div class="form-group">
+                                            <label for="cashAmount">Jumlah Uang Diterima</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Rp</span>
+                                                </div>
+                                                <input type="number" id="cashAmount" class="form-control"
+                                                    wire:model.live="cashAmount" min="{{ $this->total }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="change-info alert alert-info mt-3">
+                                            <div class="d-flex justify-content-between">
+                                                <strong>Kembalian:</strong>
+                                                <strong>Rp {{ number_format($this->change, 0, ',', '.') }}</strong>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <button class="btn btn-outline-danger" wire:click="resetAll">
+                                                <i class="fas fa-times mr-2"></i>Batal
+                                            </button>
+                                            <button class="btn btn-success" wire:click="processPayment"
+                                                {{ $cashAmount < $this->total ? 'disabled' : '' }}>
+                                                <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
+                                            </button>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="payment-methods mb-4">
+                                        <div class="btn-group d-flex">
+                                            <button
+                                                class="btn btn-outline-primary {{ $paymentMethod === 'cash' ? 'active' : '' }}"
+                                                wire:click="$set('paymentMethod', 'cash')">
+                                                <i class="fas fa-money-bill-wave mr-2"></i>Tunai
+                                            </button>
+                                            <button
+                                                class="btn btn-outline-primary {{ $paymentMethod === 'online' ? 'active' : '' }}"
+                                                wire:click="$set('paymentMethod', 'online')">
+                                                <i class="fas fa-globe mr-2"></i>Online
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary btn-lg btn-block" wire:click="preparePayment">
+                                        <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
+                                    </button>
+                                @endif
+                            @endif
                         @endif
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pesanan Belum Dibayar -->
+    <div class="modal fade" id="unpaidOrdersModal" role="dialog" aria-labelledby="unpaidOrdersModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="unpaidOrdersModalLabel">Daftar Pesanan Belum Dibayar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        @foreach ($unpaidTransactions as $transaction)
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h6>Invoice: {{ $transaction->nomor_invoice }}</h6>
+                                        <p class="mb-1">Pemesan: {{ $transaction->nama_konsumen }}</p>
+                                        <p class="mb-1">Meja: {{ $transaction->no_table }}</p>
+                                        <p class="mb-2">Total: Rp
+                                            {{ number_format($transaction->total_pembayaran, 0, ',', '.') }}</p>
+
+                                        <!-- Detail Pesanan -->
+                                        <div class="small text-muted mb-3">
+                                            <strong>Items:</strong><br>
+                                            @foreach ($transaction->items as $item)
+                                                {{ $item->product->nama_menu }} ({{ $item->jumlah }}x)<br>
+                                            @endforeach
+                                        </div>
+
+                                        <div class="btn-group w-100">
+                                            <button class="btn btn-sm btn-primary"
+                                                wire:click="editTransaction({{ $transaction->id }})"
+                                                data-dismiss="modal">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <button class="btn btn-sm btn-success"
+                                                wire:click="startPaymentForUnpaid({{ $transaction->id }})"
+                                                data-dismiss="modal">
+                                                <i class="fas fa-cash-register"></i> Proses Pembayaran
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -221,6 +334,14 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             document.addEventListener('livewire:initialized', () => {
+                // Inisialisasi modal dengan jQuery (Bootstrap 4)
+                const $modal = $('#unpaidOrdersModal');
+
+                // Event listener untuk tombol yang membuka modal
+                $('[data-toggle="modal"][data-target="#unpaidOrdersModal"]').on('click', function() {
+                    $modal.modal('show');
+                });
+
                 // Handle payment success (for both cash and online)
                 @this.on('paymentSuccess', (data) => {
                     Swal.fire({
@@ -297,7 +418,17 @@
                         icon: 'warning',
                         confirmButtonText: 'OK'
                     });
-                })
+                });
+
+                // Auto hide modal after action
+                @this.on('orderSaved', () => {
+                    $modal.modal('hide');
+                });
+
+                // Update data-dismiss handler
+                $modal.on('hidden.bs.modal', function() {
+                    // Optional: tambahkan logika yang diperlukan setelah modal tertutup
+                });
             });
 
             // Fungsi untuk cetak nota
