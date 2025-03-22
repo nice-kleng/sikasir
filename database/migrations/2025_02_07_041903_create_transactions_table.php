@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('total_pajak', 15, 2);
             $table->enum('payment_method', ['cash', 'online']);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('payment_status', ['pending', 'paid', 'failed', 'expired'])->default('pending');
+            $table->enum('payment_status', ['pending', 'paid', 'failed', 'expired', 'refund'])->default('pending');
             $table->string('snap_token')->nullable();
             $table->string('midtrans_transaction_id')->nullable();
             $table->string('midtrans_payment_type')->nullable();
