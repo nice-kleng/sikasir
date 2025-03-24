@@ -34,5 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/kategori', App\Http\Controllers\KategoriController::class);
 });
 
-
+Route::get('/refund', function () {
+    return view('form-refund');
+});
+Route::post('/transactions/refund', [KasirController::class, 'refund'])->name('refund');
 Route::post('/midtrans/callback', [KasirController::class, 'handle'])->name('midtrans.callback');

@@ -14,7 +14,7 @@ class MidtransService
         // Config::$merchantId = config('midtrans.merchant_id');
         Config::$serverKey = config('midtrans.server_key');
         Config::$clientKey = config('midtrans.client_key');
-        Config::$isProduction = config('midtrans.is_production');
+        Config::$isProduction = config('midtrans.is_production', false);
     }
 
     public function createTransaction($order)

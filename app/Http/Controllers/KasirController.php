@@ -6,10 +6,24 @@ use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class KasirController extends Controller
 {
+    protected $serverKey;
+    protected $baseUrl;
+
+    public function __construct()
+    {
+        // Ambil konfigurasi dari .env atau config
+        $this->serverKey = config('midtrans.server_key');
+        $isProduction = config('midtrans.is_production', false);
+        $this->baseUrl = $isProduction
+            ? 'https://api.midtrans.com'
+            : 'https://api.sandbox.midtrans.com';
+    }
+
     public function index()
     {
         return view('kasir.kasir');
@@ -65,5 +79,23 @@ class KasirController extends Controller
         $pdf->setPaper($customPaper, 'portrait');
 
         return $pdf->stream('Nota-' . $transaction->nomor_invoice . '.pdf');
+    }
+
+    public function refund()
+    {
+        $transactionid = 'INV-20250322-6532';
+        $amount = 2000;
+        $refundKey = 'ref_' . time() . '_' . $transactionid;
+
+        $url = $this->baseUrl . '/v2/' . $transactionid . '/refund';
+
+        $response = Http::withBasicAuth($this->serverKey, '')
+            ->post($url, [
+                'refund_key' => $refundKey,
+                'amount' => (float) $amount,
+                'reason' => 'Customer request'
+            ]);
+
+        return $response->json();
     }
 }
