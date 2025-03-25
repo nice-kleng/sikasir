@@ -125,9 +125,9 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>{{ config('app.name', 'Kasir') }}</h1>
-            <p>Jl. Contoh No. 123</p>
-            <p>Telp: (021) 1234-5678</p>
+            <h1>{{ $setting->nama_usaha ?? 'SIKASIR' }}</h1>
+            <p>{{ $setting->alamat }}</p>
+            <p>Telp: {{ $setting->telepon }}</p>
         </div>
 
         <div class="info">
@@ -145,7 +145,8 @@
                         <td class="item-name" colspan="2">{{ $item->product->nama_menu }}</td>
                     </tr>
                     <tr>
-                        <td class="item-detail">{{ $item->jumlah }}x{{ number_format($item->harga, 0, ',', '.') }}</td>
+                        <td class="item-detail">{{ $item->jumlah }}x{{ number_format($item->harga, 0, ',', '.') }}
+                        </td>
                         <td class="item-amount">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach

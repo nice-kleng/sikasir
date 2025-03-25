@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -73,9 +74,10 @@ class KasirController extends Controller
     {
         $transaction = Transaction::with(['items.product', 'user'])
             ->findOrFail($transaction_id);
+        $setting = Setting::first();
 
         $customPaper = array(0, 0, 226.772, 850.394); // 80mm x 297mm in points
-        $pdf = Pdf::loadView('kasir.nota', compact('transaction'));
+        $pdf = Pdf::loadView('kasir.nota', compact('transaction', 'setting'));
         $pdf->setPaper($customPaper, 'portrait');
 
         return $pdf->stream('Nota-' . $transaction->nomor_invoice . '.pdf');
