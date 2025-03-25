@@ -68,14 +68,19 @@
             <li class="nav-item {{ request()->routeIs('kasir.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('kasir.index') }}">
                     <i class="fas fa-cash-register"></i>
-                    <span>Kasir</span></a>
+                    <span>Transaksi</span></a>
             </li>
 
             @if (auth()->user()->isAdmin())
                 <li class="nav-item {{ request()->routeIs('report.*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('report.index') }}">
                         <i class="fas fa-file-invoice-dollar"></i>
-                        <span>Laporan</span></a>
+                        <span>Riwayat Transaksi</span></a>
+                </li>
+                <li class="nav-item {{ request()->routeIs('refund.history') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('refund.index') }}">
+                        <i class="fas fa-undo-alt"></i>
+                        <span>Riwayat Refund</span></a>
                 </li>
                 <li class="nav-item {{ request()->routeIs('setting.*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('setting.index') }}">
@@ -215,6 +220,26 @@
     <script src="{{ asset('assets/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: '{{ session('error') }}',
+            });
+        </script>
+    @endif
 
     @stack('scripts')
 

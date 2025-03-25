@@ -49,6 +49,7 @@
                                     <th>Total Pembayaran</th>
                                     <th>Metode Pembayaran</th>
                                     <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -60,6 +61,10 @@
                                         <td>Rp {{ number_format($transaction->total_pembayaran, 0, ',', '.') }}</td>
                                         <td>{{ $transaction->payment_method }}</td>
                                         <td>{{ $transaction->payment_status }}</td>
+                                        <td>
+                                            <a href="{{ route('refund.create', $transaction->id) }}"
+                                                class="btn btn-sm btn-warning">Refund</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

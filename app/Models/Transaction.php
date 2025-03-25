@@ -13,7 +13,7 @@ class Transaction extends Model
         'payment_method',
         'user_id',
         'payment_status',
-        'transaction_status', // New field
+        'transaction_status',
         'snap_token',
         'midtrans_transaction_id',
         'midtrans_payment_type',
@@ -42,5 +42,10 @@ class Transaction extends Model
     public function canBeModified()
     {
         return $this->transaction_status === 'unpaid';
+    }
+
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class);
     }
 }

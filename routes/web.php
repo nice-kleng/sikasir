@@ -32,10 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/setting', [App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');
 
     Route::resource('/kategori', App\Http\Controllers\KategoriController::class);
-});
 
-Route::get('/refund', function () {
-    return view('form-refund');
-});
-Route::post('/transactions/refund', [KasirController::class, 'refund'])->name('refund');
+    Route::get('/transactions/refund', [App\Http\Controllers\RefundController::class, 'index'])->name('refund.index');
+    Route::get('/transactions/{transaction_id}/create', [App\Http\Controllers\RefundController::class, 'create'])->name('refund.create');
+    Route::post('/transactions/refund', [App\Http\Controllers\RefundController::class, 'store'])->name('refund.store');
+});;
+// Route::post('/transactions/refund', [KasirController::class, 'refund'])->name('refund');
 Route::post('/midtrans/callback', [KasirController::class, 'handle'])->name('midtrans.callback');
