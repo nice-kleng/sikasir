@@ -179,7 +179,7 @@
                             @endif
 
                             @if ($paymentChoice === 'now')
-                                <!-- Payment Input Section (for cash) -->
+                                <!-- Input Pembayaran untuk cash -->
                                 @if ($showPaymentInput && $paymentMethod === 'cash')
                                     <div class="payment-input mb-4">
                                         <div class="form-group">
@@ -211,7 +211,7 @@
                                         </div>
                                     </div>
                                 @else
-                                    <div class="payment-methods mb-4">
+                                    {{-- <div class="payment-methods mb-4">
                                         <div class="btn-group d-flex">
                                             <button
                                                 class="btn btn-outline-primary {{ $paymentMethod === 'cash' ? 'active' : '' }}"
@@ -228,7 +228,7 @@
 
                                     <button class="btn btn-primary btn-lg btn-block" wire:click="preparePayment">
                                         <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
-                                    </button>
+                                    </button> --}}
                                 @endif
                             @endif
                         @endif

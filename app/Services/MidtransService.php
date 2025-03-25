@@ -9,12 +9,15 @@ use Midtrans\Snap;
 
 class MidtransService
 {
-    public function __construct()
+    public function __construct($serverKey, $clientKey, $isProduction)
     {
+        Config::$serverKey = $serverKey;
+        Config::$clientKey = $clientKey;
+        Config::$isProduction = $isProduction;
         // Config::$merchantId = config('midtrans.merchant_id');
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$clientKey = config('midtrans.client_key');
-        Config::$isProduction = config('midtrans.is_production', false);
+        // Config::$serverKey = config('midtrans.server_key');
+        // Config::$clientKey = config('midtrans.client_key');
+        // Config::$isProduction = config('midtrans.is_production', false);
     }
 
     public function createTransaction($order)

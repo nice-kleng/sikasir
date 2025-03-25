@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Services\MidtransService;
@@ -198,7 +199,12 @@ class Kasir extends Component
         }
 
         // Proses pembayaran online melalui Midtrans
-        $midtransService = new MidtransService();
+        $settings = Setting::first();
+        $midtransService = new MidtransService(
+            $settings->server_key,
+            $settings->client_key,
+            $settings->is_production
+        );
         $snapToken = $midtransService->createTransaction($transaction);
 
         if ($snapToken) {
