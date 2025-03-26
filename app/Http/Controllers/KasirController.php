@@ -27,7 +27,8 @@ class KasirController extends Controller
 
     public function index()
     {
-        return view('kasir.kasir');
+        $setting = Setting::first();
+        return view('kasir.kasir', compact('setting'));
     }
 
     public function handle(Request $request)

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('midtrans_merchant_id')->nullable();
             $table->string('midtrans_client_key')->nullable();
             $table->string('midtrans_server_key')->nullable();
-            $table->boolean('midtrans_environment')->default(false);
+            $table->string('midtrans_environment')->default('sandbox');
             $table->timestamps();
         });
     }

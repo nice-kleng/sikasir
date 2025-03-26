@@ -22,4 +22,21 @@ class Setting extends Model
         'midtrans_server_key',
         'midtrans_environment'
     ];
+
+    // public static function getSettings()
+    // {
+    //     return self::first();
+    // }
+
+    // public function isProductionEnvironment()
+    // {
+    //     return $this->midtrans_environment === 'production';
+    // }
+
+    // public function getSnapUrl()
+    // {
+    //     return $this->isProductionEnvironment()
+    //         ? 'https://app.midtrans.com/snap/snap.js'
+    //         : 'https://app.sandbox.midtrans.com/snap/snap.js';
+    // }
 }

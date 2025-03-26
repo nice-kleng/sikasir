@@ -157,7 +157,7 @@
                                 </div>
                             @endif
 
-                            @if ($paymentChoice === 'now' && $showPaymentMethodSelection)
+                            {{-- @if ($paymentChoice === 'now' && $showPaymentMethodSelection)
                                 <div class="payment-methods mb-4">
                                     <div class="btn-group d-flex">
                                         <button
@@ -176,7 +176,7 @@
                                         <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
                                     </button>
                                 </div>
-                            @endif
+                            @endif --}}
 
                             @if ($paymentChoice === 'now')
                                 <!-- Input Pembayaran untuk cash -->
@@ -211,7 +211,7 @@
                                         </div>
                                     </div>
                                 @else
-                                    {{-- <div class="payment-methods mb-4">
+                                    <div class="payment-methods mb-4">
                                         <div class="btn-group d-flex">
                                             <button
                                                 class="btn btn-outline-primary {{ $paymentMethod === 'cash' ? 'active' : '' }}"
@@ -228,7 +228,10 @@
 
                                     <button class="btn btn-primary btn-lg btn-block" wire:click="preparePayment">
                                         <i class="fas fa-check-circle mr-2"></i>Proses Pembayaran
-                                    </button> --}}
+                                    </button>
+                                    <button class="btn btn-secondary btn-lg btn-block" wire:click="resetAll">
+                                        Batal
+                                    </button>
                                 @endif
                             @endif
                         @endif
@@ -358,10 +361,10 @@
 
                 @this.on('showPaymentModal', (data) => {
                     // Simpan transaction ID untuk cetak nota nanti
-                    window.currentTransactionId = data.transactionId;
+                    window.currentTransactionId = data[0].transactionId;
 
                     // Tampilkan modal pembayaran Midtrans
-                    snap.pay(data.snapToken, {
+                    snap.pay(data[0].snapToken, {
                         onSuccess: function(result) {
                             @this.dispatch('paymentCallback', {
                                 status: 'success',

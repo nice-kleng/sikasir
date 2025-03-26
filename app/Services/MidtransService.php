@@ -2,22 +2,22 @@
 
 namespace App\Services;
 
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 use Midtrans\Config;
 use Midtrans\Snap;
 
-
 class MidtransService
 {
-    public function __construct($serverKey, $clientKey, $isProduction)
+    public function __construct()
     {
-        Config::$serverKey = $serverKey;
-        Config::$clientKey = $clientKey;
-        Config::$isProduction = $isProduction;
-        // Config::$merchantId = config('midtrans.merchant_id');
-        // Config::$serverKey = config('midtrans.server_key');
-        // Config::$clientKey = config('midtrans.client_key');
-        Config::$isProduction = config('midtrans.is_production', false);
+        $settings = Setting::first();
+
+        if ($settings) {
+            Config::$serverKey = $settings->midtrans_server_key;
+            Config::$clientKey = $settings->midtrans_client_key;
+            Config::$isProduction = $settings->midtrans_environment === 'production';
+        }
     }
 
     public function createTransaction($order)

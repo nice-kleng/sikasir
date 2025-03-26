@@ -8,6 +8,7 @@ use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Services\MidtransService;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class Kasir extends Component
@@ -163,6 +164,7 @@ class Kasir extends Component
             $transaction->nomor_invoice = 'INV-' . date('Ymd') . '-' . rand(1000, 9999);
         }
 
+        DB::beginTransaction();
         $transaction->fill([
             'total_pembayaran' => $this->total,
             'total_pajak' => $this->tax,
@@ -190,6 +192,7 @@ class Kasir extends Component
         }
 
         if ($this->paymentMethod === 'cash') {
+            DB::commit();
             $this->resetPayment();
             $this->dispatch('paymentSuccess', [
                 'message' => 'Pembayaran tunai berhasil!',
@@ -198,16 +201,11 @@ class Kasir extends Component
             return;
         }
 
-        // Proses pembayaran online melalui Midtrans
-        $settings = Setting::first();
-        $midtransService = new MidtransService(
-            $settings->server_key,
-            $settings->client_key,
-            $settings->is_production
-        );
+        $midtransService = new MidtransService();
         $snapToken = $midtransService->createTransaction($transaction);
 
         if ($snapToken) {
+            DB::commit();
             $transaction->update(['snap_token' => $snapToken]);
             $this->snapToken = $snapToken;
             $this->dispatch('showPaymentModal', [
@@ -215,6 +213,7 @@ class Kasir extends Component
                 'transactionId' => $transaction->id
             ]);
         } else {
+            DB::rollBack();
             $this->resetPayment();
             $this->dispatch('paymentError', ['message' => 'Gagal memproses pembayaran']);
         }
