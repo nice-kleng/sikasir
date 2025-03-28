@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class CustomerOrderController extends Controller
@@ -29,5 +30,11 @@ class CustomerOrderController extends Controller
             ->get();
 
         return response()->json($products);
+    }
+
+    public function orderSuccess($transactionId)
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+        return view('customer.order-success', compact('transaction'));
     }
 }

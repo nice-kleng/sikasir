@@ -63,7 +63,7 @@
                                         <td>Rp {{ number_format($transaction->total_pembayaran, 0, ',', '.') }}</td>
                                         <td>{{ $transaction->payment_method }}</td>
                                         <td>{{ $transaction->payment_status }}</td>
-                                        <td>{{ $transaction->user->name }}</td>
+                                        <td>{{ $transaction->user ? $transaction->user->name : '' }}</td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-sm btn-info btn-detail"
                                                 data-id="{{ $transaction->id }}">Item</a>
@@ -132,13 +132,13 @@
                     let transactionItemBody = '';
                     response.items.forEach(function(item) {
                         transactionItemBody += `
-                    <tr>
-                    <td>${item.nama_menu}</td>
-                    <td>Rp ${parseInt(item.harga).toLocaleString('id-ID')}</td>
-                    <td>${item.jumlah}</td>
-                    <td>Rp ${parseInt(item.subtotal).toLocaleString('id-ID')}</td>
-                    </tr>
-                `;
+                        <tr>
+                        <td>${item.product.nama_menu}</td>
+                        <td>Rp ${parseInt(item.harga).toLocaleString('id-ID')}</td>
+                        <td>${item.jumlah}</td>
+                        <td>Rp ${parseInt(item.subtotal).toLocaleString('id-ID')}</td>
+                        </tr>
+                    `;
                     });
 
                     $('#transactionItemBody').html(transactionItemBody);

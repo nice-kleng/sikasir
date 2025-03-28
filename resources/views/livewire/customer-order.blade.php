@@ -155,7 +155,7 @@
                     .then(response => response.json())
                     .then(data => {
                         const productList = document.getElementById('product-list');
-                        productList.innerHTML = data.data.map(product => `
+                        productList.innerHTML = data.map(product => `
                             <div class="col-md-4">
                                 <div class="card h-100 product-card" wire:click="addToCart(${product.id})"
                                     style="cursor: pointer; overflow: hidden;">
