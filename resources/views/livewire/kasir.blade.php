@@ -354,8 +354,8 @@
                         confirmButtonText: 'OK'
                     }).then(() => {
                         // Automatically print nota
-                        printNota(data[0].transactionId);
                         @this.call('resetPayment');
+                        printNota(data[0].transactionId);
                     });
                 });
 
@@ -371,6 +371,7 @@
                                 data: result
                             });
                             // Cetak nota setelah pembayaran berhasil
+                            @this.call('resetPayment');
                             printNota(window.currentTransactionId);
                         },
                         onPending: function(result) {

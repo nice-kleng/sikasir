@@ -21,6 +21,12 @@ class ReportController extends Controller
         return view('report', compact('transactions'));
     }
 
+    public function showItem(string $id)
+    {
+        $transactions = Transaction::with(['items.product'])->find($id);
+        return response()->json($transactions);
+    }
+
     public function generatePDF(Request $request)
     {
         $query = Transaction::with(['items.product'])->orderBy('created_at', 'desc');

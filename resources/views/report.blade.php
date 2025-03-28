@@ -49,6 +49,8 @@
                                     <th>Total Pembayaran</th>
                                     <th>Metode Pembayaran</th>
                                     <th>Status</th>
+                                    <th>Kasir</th>
+                                    <th>Detail</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -61,7 +63,12 @@
                                         <td>Rp {{ number_format($transaction->total_pembayaran, 0, ',', '.') }}</td>
                                         <td>{{ $transaction->payment_method }}</td>
                                         <td>{{ $transaction->payment_status }}</td>
-                                        <td>
+                                        <td>{{ $transaction->user->name }}</td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-info btn-detail"
+                                                data-id="{{ $transaction->id }}">Item</a>
+                                        </td>
+                                        <td class="text-center">
                                             <a href="{{ route('refund.create', $transaction->id) }}"
                                                 class="btn btn-sm btn-warning">Refund</a>
                                         </td>
@@ -77,4 +84,67 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Transaction Item -->
+    <div class="modal fade" id="transactionItem" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="transactionItemLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transactionItemLabel">Transaction Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nama Produk</th>
+                                <th>Harga</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionItemBody">
+                            {{-- Data will be inserted here --}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.btn-detail').click(function() {
+                $('#transactionItemBody').html('');
+                let transactionId = $(this).data('id');
+                let url = "{{ route('report.show', ':id') }}";
+                url = url.replace(':id', transactionId);
+
+                $.get(url, function(response) {
+                    let transactionItemBody = '';
+                    response.items.forEach(function(item) {
+                        transactionItemBody += `
+                    <tr>
+                    <td>${item.nama_menu}</td>
+                    <td>Rp ${parseInt(item.harga).toLocaleString('id-ID')}</td>
+                    <td>${item.jumlah}</td>
+                    <td>Rp ${parseInt(item.subtotal).toLocaleString('id-ID')}</td>
+                    </tr>
+                `;
+                    });
+
+                    $('#transactionItemBody').html(transactionItemBody);
+                    $('#transactionItem').modal('show');
+                });
+            });
+        });
+    </script>
+@endpush
