@@ -188,7 +188,7 @@ class Kasir extends Component
                     'product_id' => $productId,
                     'jumlah' => $item['jumlah'],
                     'harga' => $item['harga'],
-                    'subtotal' => $item['harga'] * $item['jumlah']
+                    'subtotal' => ($item['harga'] * $item['jumlah']) + (($item['harga'] * $item['jumlah']) * 0.1)
                 ]);
             }
         }
@@ -258,7 +258,7 @@ class Kasir extends Component
                 'product_id' => $productId,
                 'jumlah' => $item['jumlah'],
                 'harga' => $item['harga'],
-                'subtotal' => $item['harga'] * $item['jumlah']
+                'subtotal' => ($item['harga'] * $item['jumlah']) + (($item['harga'] * $item['jumlah']) * 0.1)
             ]);
         }
 

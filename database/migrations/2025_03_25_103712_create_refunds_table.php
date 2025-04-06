@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('refunds', function (Blueprint $table) {
             $table->id();
+            // $table->foreignId('transaction_id')->constrained('transactions')->onDelete('cascade');
             $table->foreignId('transaction_id')->constrained('transactions')->onDelete('cascade');
             $table->string('refund_number')->unique();
             $table->integer('total_refund');
