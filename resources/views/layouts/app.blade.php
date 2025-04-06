@@ -63,6 +63,11 @@
                         <i class="fas fa-fw fa-utensils"></i>
                         <span>Product</span></a>
                 </li>
+                <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('users.index') }}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Pengguna</span></a>
+                </li>
             @endif
 
             <li class="nav-item {{ request()->routeIs('kasir.*') ? 'active' : '' }}">
@@ -71,17 +76,17 @@
                     <span>Transaksi</span></a>
             </li>
 
+            <li class="nav-item {{ request()->routeIs('report.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('report.index') }}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Riwayat Transaksi</span></a>
+            </li>
+            <li class="nav-item {{ request()->routeIs('refund.history') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('refund.index') }}">
+                    <i class="fas fa-undo-alt"></i>
+                    <span>Riwayat Refund</span></a>
+            </li>
             @if (auth()->user()->isAdmin())
-                <li class="nav-item {{ request()->routeIs('report.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('report.index') }}">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        <span>Riwayat Transaksi</span></a>
-                </li>
-                <li class="nav-item {{ request()->routeIs('refund.history') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('refund.index') }}">
-                        <i class="fas fa-undo-alt"></i>
-                        <span>Riwayat Refund</span></a>
-                </li>
                 <li class="nav-item {{ request()->routeIs('setting.*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('setting.index') }}">
                         <i class="fas fa-cog"></i>

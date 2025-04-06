@@ -181,14 +181,16 @@ class Kasir extends Component
 
         $this->currentTransactionId = $transaction->id;
 
-        foreach ($this->cart as $productId => $item) {
-            TransactionItem::create([
-                'transaction_id' => $transaction->id,
-                'product_id' => $productId,
-                'jumlah' => $item['jumlah'],
-                'harga' => $item['harga'],
-                'subtotal' => $item['harga'] * $item['jumlah']
-            ]);
+        if (!$transaction->items()->exists()) {
+            foreach ($this->cart as $productId => $item) {
+                TransactionItem::create([
+                    'transaction_id' => $transaction->id,
+                    'product_id' => $productId,
+                    'jumlah' => $item['jumlah'],
+                    'harga' => $item['harga'],
+                    'subtotal' => $item['harga'] * $item['jumlah']
+                ]);
+            }
         }
 
         if ($this->paymentMethod === 'cash') {

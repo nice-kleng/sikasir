@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/setting', [App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');
 
     Route::resource('/kategori', App\Http\Controllers\KategoriController::class);
+    Route::resource('/users', App\Http\Controllers\UserController::class);
 
     Route::get('/transactions/refund', [App\Http\Controllers\RefundController::class, 'index'])->name('refund.index');
     Route::get('/transactions/{transaction_id}/create', [App\Http\Controllers\RefundController::class, 'create'])->name('refund.create');

@@ -35,7 +35,14 @@ class KasirController extends Controller
     {
         Log::info('Midtrans Callback:', $request->all());
 
-        $serverKey = config('midtrans.server_key');
+        $setting = Setting::first();
+        $serverKey = $setting->midtrans_server_key;
+        if ($setting->midtrans_is_production) {
+            $serverKey = $setting->midtrans_server_key;
+        } else {
+            $serverKey = $setting->midtrans_server_key_sandbox;
+        }
+        // $serverKey = config('midtrans.server_key');
         $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
         if ($hashed == $request->signature_key) {
