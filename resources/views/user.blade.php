@@ -28,14 +28,14 @@
                                         <td>{{ $user->name }}</td>
                                         <td>{{ App\UserRole::from($user->role)->label() }}</td>
                                         <td>
-                                            <a href="javascript:void(0)" class="btn btn-warning btn-sm" data-toggle="modal"
-                                                data-target="#modalForm" data-id="{{ $user->id }}"
+                                            <a href="javascript:void(0)" class="btn btn-warning btn-sm btn-edit"
+                                                data-toggle="modal" data-target="#modalForm" data-id="{{ $user->id }}"
                                                 data-name="{{ $user->name }}" data-role="{{ $user->role }}"
                                                 title="Edit">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                data-target="#deleteModal" data-id="{{ $user->id }}" title="Hapus">
+                                            <a href="javascript:void(0)" class="btn btn-danger btn-sm btn-destroy"
+                                                title="Hapus" data-id="{{ $user->id }}">
                                                 <i class="fas fa-trash"></i> Hapus
                                             </a>
                                         </td>
@@ -64,10 +64,10 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="name">Nama Menu/Product</label>
+                            <label for="name">Nama Lengkap</label>
                             <input type="hidden" name="id" id="id">
                             <input type="text" name="name" id="name" class="form-control">
-                            <small class="text-danger error-text name_error"></small>$collection
+                            <small class="text-danger error-text name_error"></small>
                         </div>
                         <div class="form-group">
                             <label for="username">Username</label>
@@ -148,7 +148,7 @@
                     },
                     error: function(xhr) {
                         if (xhr.status == 422) {
-                            $.each(errors, function(key, val) {
+                            $.each(xhr.responseJSON.errors, function(key, val) {
                                 $('small.' + key + '_error').text(val[0]);
                             });
                         } else {
@@ -165,6 +165,7 @@
             $(document).on('click', '.btn-edit', function() {
                 let id = $(this).data('id');
                 let url = "{{ route('users.edit', ':user') }}".replace(':user', id);
+                console.log(url);
 
                 $.ajax({
                     type: "get",
@@ -191,6 +192,8 @@
 
             $(document).on('click', '.btn-destroy', function() {
                 let id = $(this).data('id');
+                console.log(id);
+
 
                 Swal.fire({
                     title: 'Apakah anda yakin?',

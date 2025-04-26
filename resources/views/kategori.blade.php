@@ -63,7 +63,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="nama_kategori">Nama Menu/Product</label>
+                            <label for="nama_kategori">Nama Kategori</label>
                             <input type="hidden" name="id" id="id">
                             <input type="text" name="nama_kategori" id="nama_kategori" class="form-control">
                             <small class="text-danger error-text nama_kategori_error"></small>
@@ -133,7 +133,7 @@
                     },
                     error: function(xhr) {
                         if (xhr.status == 422) {
-                            $.each(errors, function(key, val) {
+                            $.each(xhr.responseJSON.errors, function(key, val) {
                                 $('small.' + key + '_error').text(val[0]);
                             });
                         } else {
