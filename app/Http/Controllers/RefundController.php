@@ -29,7 +29,7 @@ class RefundController extends Controller
 
         $transaction = Transaction::find($request->transaction_id);
         if ($request->total_refund > $transaction->total_pembayaran) {
-            return redirect()->back()->with('error', 'Total refund harus melebihi total pembayaran');
+            return redirect()->back()->with('error', 'Total refund melebihi total pembayaran');
         }
 
         $refund_number = 'RF' . date('ymdHis');

@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/report', [App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
     Route::get('/report/pdf', [App\Http\Controllers\ReportController::class, 'generatePDF'])->name('report.pdf');
     Route::get('/report/{id}', [App\Http\Controllers\ReportController::class, 'showItem'])->name('report.show');
+    Route::get('/laporan-penjualan', [App\Http\Controllers\ReportController::class, 'laporanPenjualan'])->name('report.laporan-penjualan');
     // Route::get('/report/{id}/print', [App\Http\Controllers\ReportController::class, 'printNota'])->name('report.print');
     // Route::get('/report/{id}/refund', [App\Http\Controllers\RefundController::class, 'create'])->name('report.refund');
 
