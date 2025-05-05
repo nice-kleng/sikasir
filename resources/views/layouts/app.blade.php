@@ -86,6 +86,11 @@
                     <i class="fas fa-undo-alt"></i>
                     <span>Riwayat Refund</span></a>
             </li>
+            <li class="nav-item {{ request()->routeIs('report.laporan-penjualan') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('report.laporan-penjualan') }}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Laporan Penjualan</span></a>
+            </li>
             @if (auth()->user()->isAdmin())
                 <li class="nav-item {{ request()->routeIs('setting.*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('setting.index') }}">

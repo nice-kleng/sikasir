@@ -11,6 +11,8 @@
 
     <script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ $setting->midtrans_client_key ?? '' }}"></script>
 
+    <link href="{{ asset('assets/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+
     @livewireStyles
 </head>
 
@@ -69,6 +71,9 @@
             alert(data[0].message);
         });
     </script>
+
+    <script src="{{ asset('assets/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     @stack('scripts')
 </body>
 

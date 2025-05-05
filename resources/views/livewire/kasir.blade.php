@@ -244,7 +244,7 @@
     <!-- Modal Pesanan Belum Dibayar -->
     <div class="modal fade" id="unpaidOrdersModal" role="dialog" aria-labelledby="unpaidOrdersModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="unpaidOrdersModalLabel">Daftar Pesanan Belum Dibayar</h5>
@@ -254,7 +254,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        @foreach ($unpaidTransactions as $transaction)
+                        {{-- @foreach ($unpaidTransactions as $transaction)
                             <div class="col-md-6 mb-3">
                                 <div class="card h-100">
                                     <div class="card-body">
@@ -287,7 +287,55 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @endforeach --}}
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered datatable text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice</th>
+                                            <th>Pemesan</th>
+                                            <th>Meja</th>
+                                            <th>Total</th>
+                                            <th>Items</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($unpaidTransactions as $transaction)
+                                            <tr>
+                                                <td>{{ $transaction->nomor_invoice }}</td>
+                                                <td>{{ $transaction->nama_konsumen }}</td>
+                                                <td>{{ $transaction->no_table }}</td>
+                                                <td>Rp {{ number_format($transaction->total_pembayaran, 0, ',', '.') }}
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        @foreach ($transaction->items as $item)
+                                                            <li class="text-muted">
+                                                                {{ $item->product->nama_menu }} ({{ $item->jumlah }}x)
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-sm btn-primary"
+                                                        wire:click="editTransaction({{ $transaction->id }})"
+                                                        data-dismiss="modal">
+                                                        Edit
+                                                    </button>
+                                                    <button class="btn btn-sm btn-success"
+                                                        wire:click="startPaymentForUnpaid({{ $transaction->id }})"
+                                                        data-dismiss="modal">
+                                                        Proses Pembayaran
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -336,6 +384,10 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
+            $(document).ready(function() {
+                // Inisialisasi DataTable
+                $('.datatable').DataTable();
+            });
             document.addEventListener('livewire:initialized', () => {
                 // Inisialisasi modal dengan jQuery (Bootstrap 4)
                 const $modal = $('#unpaidOrdersModal');
