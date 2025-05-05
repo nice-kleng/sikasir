@@ -11,7 +11,7 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Transaction::with(['items.product'])->where('payment_status', 'paid')->orderBy('created_at', 'desc');
+        $query = Transaction::with(['items.product'])->orderBy('created_at', 'desc');
 
         if ($request->start_date && $request->end_date) {
             $query->whereBetween('created_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);

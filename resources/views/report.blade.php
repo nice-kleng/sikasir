@@ -45,6 +45,7 @@
                                 <tr>
                                     <th>No. Invoice</th>
                                     <th>Pembeli</th>
+                                    <th>Nomor Meja</th>
                                     <th>Tanggal</th>
                                     <th>Total Pembayaran</th>
                                     <th>Metode Pembayaran</th>
@@ -59,6 +60,7 @@
                                     <tr>
                                         <td>{{ $transaction->nomor_invoice }}</td>
                                         <td>{{ $transaction->nama_konsumen }}</td>
+                                        <td>{{ $transaction->no_table }}</td>
                                         <td>{{ $transaction->created_at->format('d/m/Y H:i') }}</td>
                                         <td>Rp {{ number_format($transaction->total_pembayaran, 0, ',', '.') }}</td>
                                         <td>{{ $transaction->payment_method }}</td>
