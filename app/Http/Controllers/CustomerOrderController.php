@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
@@ -17,9 +18,13 @@ class CustomerOrderController extends Controller
         // Ambil produk yang tersedia
         $products = Product::where('status', 'Tersedia')->paginate(10);
 
+        // Settings untuk cek Aktifasi halaman
+        $setting = Setting::first();
+
         return view('customer.order', [
             'categories' => $categories,
-            'products' => $products
+            'products' => $products,
+            'is_aktif_page' => $setting->permission_front_menu,
         ]);
     }
 

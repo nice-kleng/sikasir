@@ -135,6 +135,31 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <div class="form-group">
+                                    <label>Aktivasi Halaman Menu</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input
+                                                class="form-check-input @error('permission_front_menu') is-invalid @enderror"
+                                                type="radio" name="permission_front_menu" id="permission_front_menu_aktif"
+                                                value="1"
+                                                {{ old('permission_front_menu', $setting->permission_front_menu) == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="permission_front_menu_aktif">Aktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input
+                                                class="form-check-input @error('permission_front_menu') is-invalid @enderror"
+                                                type="radio" name="permission_front_menu"
+                                                id="permission_front_menu_nonaktif" value="0"
+                                                {{ old('permission_front_menu', $setting->permission_front_menu) == 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="permission_front_menu_nonaktif">Non
+                                                Aktif</label>
+                                        </div>
+                                        @error('permission_front_menu')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

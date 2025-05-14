@@ -20,7 +20,8 @@ class Setting extends Model
         'midtrans_merchant_id',
         'midtrans_client_key',
         'midtrans_server_key',
-        'midtrans_environment'
+        'midtrans_environment',
+        'permission_front_menu',
     ];
 
     // public static function getSettings()

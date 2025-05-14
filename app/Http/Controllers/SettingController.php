@@ -21,6 +21,7 @@ class SettingController extends Controller
                 'telepon' => 'Telepon',
                 'email' => 'email@example.com',
                 'deskripsi' => 'Deskripsi',
+                'permission_front_menu' => '1'
             ]);
         }
 
@@ -59,6 +60,8 @@ class SettingController extends Controller
             }
             $data['favicon'] = $request->file('favicon')->store('favicons');
         }
+
+        $data['permission_front_menu'] = $request->permission_front_menu;
 
         $setting->update($data);
         return redirect()->back()->with('success', 'Pengaturan berhasil diupdate');
