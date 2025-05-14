@@ -58,7 +58,7 @@ class ReportController extends Controller
         }
 
 
-        $transactions->orderBy('total_pembayaran', 'desc');
+        $transactions->orderBy('total_terjual', 'desc');
         return view('laporan-penjualan', [
             'transactions' => $transactions->get(),
         ]);
