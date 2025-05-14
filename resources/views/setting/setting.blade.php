@@ -16,7 +16,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Logo</label>
                                     <input type="file" name="logo"
                                         class="form-control @error('logo') is-invalid @enderror">
@@ -31,7 +31,7 @@
                                     @error('favicon')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                </div>
+                                </div> --}}
                                 <div class="form-group">
                                     <label>Nama Usaha</label>
                                     <input type="text" name="nama_usaha"
